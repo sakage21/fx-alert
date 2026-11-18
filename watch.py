@@ -34,6 +34,9 @@ LOOKBACK_SECONDS = 20 * 60
 BAR_OVERLAP_SECONDS = 60
 PIP = 0.01
 WEEKEND_CUTOVER_HOUR = 7
+BLACKOUT_START_HOUR = 5  # inclusive, JST
+BLACKOUT_END_HOUR = 8    # exclusive: 05:00 through 07:59
+SPIKE_HYSTERESIS_PIPS = 10
 REQUEST_TIMEOUT = 12
 WEBHOOK_TIMEOUT = 15
 USER_AGENT = "Mozilla/5.0 (compatible; fx-alert/1.0)"
@@ -104,6 +107,12 @@ def is_weekend(dt: datetime) -> bool:
     if wd == 0 and hour < WEEKEND_CUTOVER_HOUR:
         return True
     return False
+
+
+def is_blackout(dt: datetime) -> bool:
+    """Daily quiet window: 05:00 through 07:59 JST, when spreads typically widen."""
+    local = dt.astimezone(JST)
+    return BLACKOUT_START_HOUR <= local.hour < BLACKOUT_END_HOUR
 
 
 def session_headers() -> dict[str, str]:
@@ -201,6 +210,7 @@ def default_state() -> dict[str, Any]:
         "last_fire_time": None,
         "last_fire_type": None,
         "last_spike_fire_time": None,
+        "last_spike_price": None,
         "last_checked_time": None,
         "samples": [],
         "fired_history": [],
@@ -336,6 +346,8 @@ def record_fire(state: dict[str, Any], fire_type: str, detail: dict[str, Any], n
     state["last_fire_type"] = fire_type
     if fire_type == "spike":
         state["last_spike_fire_time"] = to_iso(now)
+        if isinstance(detail.get("price"), (int, float)):
+            state["last_spike_price"] = float(detail["price"])
     history = state.get("fired_history") or []
     history.append({"time": to_iso(now), "type": fire_type, **detail})
     state["fired_history"] = history[-20:]
@@ -416,6 +428,22 @@ def spike_move(
     return {"high": high, "low": low, "move_pips": move_pips, "samples": len(highs)}
 
 
+def spike_hysteresis_blocks(state: dict[str, Any], price: float) -> Optional[str]:
+    """After a spike fire, require a 10-pip move away from that price before another spike."""
+    last_px = state.get("last_spike_price")
+    if not isinstance(last_px, (int, float)):
+        return None
+    distance = abs(float(price) - float(last_px))
+    need = SPIKE_HYSTERESIS_PIPS * PIP
+    if distance + 1e-12 < need:
+        moved = distance / PIP
+        return (
+            f"spike hysteresis: {moved:.1f}pips from last spike price "
+            f"{float(last_px):.3f} (need {SPIKE_HYSTERESIS_PIPS:g})"
+        )
+    return None
+
+
 def wants_test(args: argparse.Namespace) -> bool:
     if args.test_webhook:
         return True
@@ -456,17 +484,25 @@ def handle_tick() -> int:
     age = (now - ts.astimezone(JST)).total_seconds()
     stale = age > STALE_SECONDS
     weekend = is_weekend(now)
+    blackout = is_blackout(now)
     start = window_start(load_state(), now)
     high, low, bar_count = period_extremes(price, bars, start)
 
     state = load_state()
     remember_sample(state, price, ts)
 
+    flags = []
+    if stale:
+        flags.append("stale")
+    if weekend:
+        flags.append("weekend")
+    if blackout:
+        flags.append("blackout")
     log(
         f"quote source={source} price={price:.3f} time={to_iso(ts)} "
         f"age={int(round(age))}s high={high:.3f} low={low:.3f} "
         f"bars={bar_count} lookback={to_iso(start)}"
-        f"{' stale' if stale else ''}{' weekend' if weekend else ''}"
+        f"{' ' + ' '.join(flags) if flags else ''}"
     )
 
     if stale:
@@ -474,7 +510,9 @@ def handle_tick() -> int:
         # Do not advance last_checked_time, so the next run can still see this window.
         save_state(state)
         return 0
-    if weekend:
+    if weekend or blackout:
+        reason = "weekend" if weekend else "blackout"
+        log(f"skip fire: {reason} price={price:.3f}")
         state["last_checked_time"] = to_iso(ts)
         save_state(state)
         return 0
@@ -502,7 +540,11 @@ def handle_tick() -> int:
         spike_pips, spike_minutes = 20.0, 15
     spike = spike_move(state, now, spike_minutes, bars, price, ts)
     if spike and spike["move_pips"] >= spike_pips:
-        candidates.append(("spike", spike))
+        blocked = spike_hysteresis_blocks(state, price)
+        if blocked:
+            log(blocked + f" price={price:.3f}")
+        else:
+            candidates.append(("spike", spike))
 
     if not candidates:
         state["last_checked_time"] = to_iso(ts)
@@ -564,7 +606,12 @@ def handle_tick() -> int:
         record_fire(
             state,
             "spike",
-            {"move_pips": round(obj["move_pips"], 1), "high": obj["high"], "low": obj["low"]},
+            {
+                "move_pips": round(obj["move_pips"], 1),
+                "high": obj["high"],
+                "low": obj["low"],
+                "price": round(price, 3),
+            },
             now,
         )
     state["last_checked_time"] = to_iso(ts)
