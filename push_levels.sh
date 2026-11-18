@@ -41,7 +41,7 @@ print(f"levels.json OK（{len(data['levels'])}件）")
 ENDJSONCHECK
 
 git fetch origin
-if ! git pull --rebase origin main; then
+if ! git pull --rebase --autostash origin main; then
   echo "git pull --rebase に失敗しました。衝突を解消してからやり直してください。" >&2
   exit 1
 fi
