@@ -1,0 +1,42 @@
+name: watch
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      send_test:
+        description: "テスト用のWebhook（type=test）を送る"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fx-alert-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run watcher
+        env:
+          FX_ALERT_WEBHOOK_URL: ${{ secrets.FX_ALERT_WEBHOOK_URL }}
+          FX_ALERT_WEBHOOK_AUTH: ${{ secrets.FX_ALERT_WEBHOOK_AUTH }}
+          SEND_TEST: ${{ inputs.send_test }}
+          TZ: Asia/Tokyo
+        run: python3 watch.py
+
+      - name: Commit and push state
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash commit_state.sh

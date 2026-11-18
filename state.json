@@ -1,0 +1,8 @@
+{
+  "last_fire_time": null,
+  "last_fire_type": null,
+  "last_spike_fire_time": null,
+  "last_checked_time": null,
+  "samples": [],
+  "fired_history": []
+}

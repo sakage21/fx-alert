@@ -1,0 +1,21 @@
+{
+  "levels": [
+    {
+      "id": "stop-approach",
+      "price": 159.5,
+      "direction": "above",
+      "note": "売り1.5lot@159.480の損切159.580の手前（21:45高値159.48・雲上限の上抜け）。建値付近、FOMC議事録で再上昇なら判断"
+    },
+    {
+      "id": "day-low-break",
+      "price": 159.1,
+      "direction": "below",
+      "note": "本日安値159.13割れ（利確通過後の確認）"
+    }
+  ],
+  "spike": {
+    "pips": 20,
+    "minutes": 15
+  },
+  "updated": "2026-11-18T23:45:04+09:00"
+}

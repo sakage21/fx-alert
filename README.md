@@ -1,0 +1,75 @@
+# FXデモ ドル円価格監視（GitHub Actions）
+
+約5分おきに公開のドル円レートを確認し、指定した価格に到達したとき、または急変動のときだけルーチン「FXデモ価格アラート」をWebhookで起こします。普段はLLMを使いません。
+
+以前は箱（Grok Botのコンピューター）で1分おきに動かしていましたが、箱が休止すると記録が途切れるため、GitHub Actionsへ移しました。公開リポジトリでも、通知用の鍵はリポジトリのシークレットに置き、コードや監視価格には載せません。
+
+## 動き方
+
+- ワークフロー `.github/workflows/watch.yml` が約5分おきに起動します（`workflow_dispatch` でも手動実行できます）。GitHubの混雑時は遅れることがあります。
+- `watch.py` が Yahoo Finance の `JPY=X` 1分足を取得し（予備: fxratesapi）、**前回確認以降の高値・安値**（最大約20分、1分の重なりあり）で監視価格を判定します。最新値だけだと、実行と実行のあいだのヒゲを取り逃がすためです。
+- 通知に成功したレベルは `levels.json` から削除し、`state.json` とあわせてワークフローがコミット・プッシュします。
+- レートや通知用の鍵はログに出しません。
+
+## ファイル
+
+- `watch.py` … 監視本体（Python標準ライブラリのみ）
+- `levels.json` … 監視する価格（これを編集する）
+- `state.json` … 最後に確認した時刻・通知履歴など（通常は触らない）
+- `commit_state.sh` … Actionsが状態をコミットして戻すための内部スクリプト
+- `push_levels.sh` … 点検側が `levels.json` を書き換えたあとに使う
+- `status.sh` … 最近の実行と、今の levels / state を表示する
+
+## levels.json の編集
+
+点検のたびに、今の相場・建玉・予約注文に合わせて監視価格を2〜3個に書き直します。編集するのはこのリポジトリの作業コピーです。
+
+```bash
+cd /workspace/fx-alert-gh
+git pull --rebase origin main
+# levels.json を編集
+/workspace/fx-alert-gh/push_levels.sh
+```
+
+`push_levels.sh` は JSONの構文確認、Actionsが先に書き戻した state / levels の取り込み（`git pull --rebase`）、コミット、プッシュまで行います。
+
+```json
+{
+  "id": "stop-approach",
+  "price": 159.5,
+  "direction": "above",
+  "note": "損切の手前"
+}
+```
+
+- `direction` が `above` なら、その価格以上（期間高値が到達）で通知します。
+- `direction` が `below` なら、その価格以下（期間安値が到達）で通知します。
+- 通知に成功したレベルは自動で削除され、同じものは二度届きません。
+- `spike` は「指定した分数のあいだに、指定したpips以上動いたとき」です。初期値は15分で20pips（20銭）。1分足の高値・安値で見ます。
+
+編集中にJSONが壊れているとその回は読み飛ばします。`push_levels.sh` を使うと、壊れたまま送らずに止まります。
+
+状態の確認:
+
+```bash
+/workspace/fx-alert-gh/status.sh
+```
+
+手動でテスト通知（type=test）を送るとき:
+
+```bash
+gh workflow run watch.yml --repo sakage21/fx-alert -f send_test=true
+```
+
+テスト通知はルーチン側で `/workspace/fx-watch/test_received.txt` に記録され、ユーザーへは送りません。
+
+## 通知のルール
+
+- 全体で60分に1回まで（クールダウン中に届いたレベルは残しておき、解除後もその価格の向こうにいれば送ります）。
+- 土曜 07:00 〜 月曜 07:00（日本時間）は通知しません。確認時刻の記録は続けます。
+- レートの時刻が10分以上古いときも通知しません。このときは確認時刻を進めないので、次の回で同じ期間を見られます。
+- 公開レート（優先: Yahoo Finance `JPY=X`、予備: fxratesapi）は、みんなのFXの画面と数銭ずれることがあります。注文はその画面で確認してください。
+
+## シークレット
+
+リポジトリシークレット `FX_ALERT_WEBHOOK_URL` と `FX_ALERT_WEBHOOK_AUTH` をワークフローが環境変数として読みます。`AUTH` は `Authorization: Bearer …` のようなヘッダー行そのものです。値はログにもファイルにも書きません。
