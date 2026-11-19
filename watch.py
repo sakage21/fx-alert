@@ -552,7 +552,14 @@ def handle_tick() -> int:
         save_state(state)
         return 0
 
+    # Levels fire once and are then removed, so they cannot repeat-spam; the
+    # global cooldown only holds back spike alerts. (Before 2026-11-19 a level
+    # hit during cooldown was silently dropped.)
     if cooldown_active(state, now):
+        level_only = [c for c in candidates if c[0] == "level"]
+        if level_only:
+            candidates = level_only
+    if cooldown_active(state, now) and not any(c[0] == "level" for c in candidates):
         left = cooldown_remaining(state, now)
         kinds = []
         for typ, obj in candidates:
