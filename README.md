@@ -77,3 +77,7 @@ gh workflow run watch.yml --repo sakage21/fx-alert -f send_test=true
 ## シークレット
 
 リポジトリシークレット `FX_ALERT_WEBHOOK_URL` と `FX_ALERT_WEBHOOK_AUTH` をワークフローが環境変数として読みます。`AUTH` は `Authorization: Bearer …` のようなヘッダー行そのものです。値はログにもファイルにも書きません。
+
+## 2026-11-19 の変更
+- 監視価格に届いたときの通知は、1時間のクールダウン中でも送る（クールダウンは急変通知だけ）。
+- YahooのJPY=Xはデモの値より数銭ずれるため、監視価格は書いた値の3銭手前で発火する（above は price-0.03 以上、below は price+0.03 以下）。

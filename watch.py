@@ -31,6 +31,7 @@ STATE_PATH = ROOT / "state.json"
 JST = timezone(timedelta(hours=9))
 STALE_SECONDS = 10 * 60
 COOLDOWN_SECONDS = 60 * 60
+LEVEL_MARGIN_PIPS = 3  # levels fire 3 pips before the written price
 LOOKBACK_SECONDS = 20 * 60
 BAR_OVERLAP_SECONDS = 60
 PIP = 0.01
@@ -270,10 +271,12 @@ def level_touched(level: dict[str, Any], period_high: float, period_low: float) 
     except Exception:
         return False
     direction = str(level.get("direction") or "").strip().lower()
+    # Yahoo's JPY=X runs a few pips off the demo's Bid/Ask, so fire a little early.
+    margin = LEVEL_MARGIN_PIPS * PIP
     if direction == "above":
-        return period_high >= target
+        return period_high >= target - margin
     if direction == "below":
-        return period_low <= target
+        return period_low <= target + margin
     return False
 
 
