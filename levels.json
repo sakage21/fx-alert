@@ -7,12 +7,6 @@
       "note": "160円突破。介入急落リスクを確認、新規は朝以降"
     },
     {
-      "id": "dip-again",
-      "price": 159.7,
-      "direction": "below",
-      "note": "再び1h転換線159.72割れ。高値圏からの失速を確認"
-    },
-    {
       "id": "risk-off-low",
       "price": 159.5,
       "direction": "below",
@@ -23,5 +17,5 @@
     "pips": 20,
     "minutes": 15
   },
-  "updated": "2026-11-20T01:45:00+09:00"
+  "updated": "2026-11-20T02:02:14+09:00"
 }

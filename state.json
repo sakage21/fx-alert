@@ -1,25 +1,17 @@
 {
-  "last_fire_time": "2026-11-20T01:40:33+09:00",
+  "last_fire_time": "2026-11-20T02:02:14+09:00",
   "last_fire_type": "level",
   "last_spike_fire_time": null,
   "last_spike_price": null,
-  "last_checked_time": "2026-11-20T01:45:32+09:00",
+  "last_checked_time": "2026-11-20T02:02:07+09:00",
   "samples": [
-    {
-      "time": "2026-11-20T01:30:31+09:00",
-      "price": 159.879
-    },
-    {
-      "time": "2026-11-20T01:35:32+09:00",
-      "price": 159.866
-    },
-    {
-      "time": "2026-11-20T01:40:32+09:00",
-      "price": 159.92
-    },
     {
       "time": "2026-11-20T01:45:32+09:00",
       "price": 159.89
+    },
+    {
+      "time": "2026-11-20T02:02:07+09:00",
+      "price": 159.756
     }
   ],
   "fired_history": [
@@ -64,6 +56,12 @@
       "type": "level",
       "id": "recover-high",
       "price": 159.92
+    },
+    {
+      "time": "2026-11-20T02:02:14+09:00",
+      "type": "level",
+      "id": "dip-again",
+      "price": 159.7
     }
   ]
 }
