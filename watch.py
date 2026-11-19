@@ -30,7 +30,7 @@ STATE_PATH = ROOT / "state.json"
 
 JST = timezone(timedelta(hours=9))
 STALE_SECONDS = 10 * 60
-COOLDOWN_SECONDS = 60 * 60
+COOLDOWN_SECONDS = 0  # removed 2026-11-19 per user: levels re-armed on each wake, spikes use 10-pip hysteresis
 LEVEL_MARGIN_PIPS = 3  # levels fire 3 pips before the written price
 LOOKBACK_SECONDS = 20 * 60
 BAR_OVERLAP_SECONDS = 60
