@@ -1,18 +1,10 @@
 {
-  "last_fire_time": "2026-11-20T02:02:14+09:00",
+  "last_fire_time": "2026-11-20T08:05:03+09:00",
   "last_fire_type": "level",
   "last_spike_fire_time": null,
   "last_spike_price": null,
-  "last_checked_time": "2026-11-20T08:00:02+09:00",
+  "last_checked_time": "2026-11-20T08:05:02+09:00",
   "samples": [
-    {
-      "time": "2026-11-20T07:44:08+09:00",
-      "price": 159.652
-    },
-    {
-      "time": "2026-11-20T07:45:01+09:00",
-      "price": 159.645
-    },
     {
       "time": "2026-11-20T07:50:01+09:00",
       "price": 159.65
@@ -24,6 +16,10 @@
     {
       "time": "2026-11-20T08:00:02+09:00",
       "price": 159.611
+    },
+    {
+      "time": "2026-11-20T08:05:02+09:00",
+      "price": 159.559
     }
   ],
   "fired_history": [
@@ -74,6 +70,12 @@
       "type": "level",
       "id": "dip-again",
       "price": 159.7
+    },
+    {
+      "time": "2026-11-20T08:05:03+09:00",
+      "type": "level",
+      "id": "kijun-break",
+      "price": 159.54
     }
   ]
 }
