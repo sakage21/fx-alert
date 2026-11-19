@@ -1,21 +1,27 @@
 {
   "levels": [
     {
-      "id": "risk-off-low",
-      "price": 159.5,
-      "direction": "below",
-      "note": "株安リスクオフで押しが深い(1h基準線159.57割れ)。下落の勢いと介入有無を確認、買い直しは見送り寄り"
-    },
-    {
       "id": "break-160",
       "price": 160.02,
       "direction": "above",
-      "note": "160円突破。介入急落リスクを確認"
+      "note": "160円突破。介入急落リスクを確認、新規は朝以降"
+    },
+    {
+      "id": "dip-again",
+      "price": 159.7,
+      "direction": "below",
+      "note": "再び1h転換線159.72割れ。高値圏からの失速を確認"
+    },
+    {
+      "id": "risk-off-low",
+      "price": 159.5,
+      "direction": "below",
+      "note": "1h基準線159.57割れの深い押し。下落の勢いと介入有無を確認"
     }
   ],
   "spike": {
     "pips": 20,
     "minutes": 15
   },
-  "updated": "2026-11-20T01:40:33+09:00"
+  "updated": "2026-11-20T01:45:00+09:00"
 }
