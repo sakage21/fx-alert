@@ -1,12 +1,6 @@
 {
   "levels": [
     {
-      "id": "stop-near",
-      "price": 159.69,
-      "direction": "above",
-      "note": "売り2.0lot@159.600の損切159.700接近・本日高値159.659上抜け。約定確認と上目線への切替検討"
-    },
-    {
       "id": "progress",
       "price": 159.46,
       "direction": "below",
@@ -23,5 +17,5 @@
     "pips": 20,
     "minutes": 15
   },
-  "updated": "2026-11-19T16:12:00+09:00"
+  "updated": "2026-11-19T16:27:20+09:00"
 }
