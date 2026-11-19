@@ -1,12 +1,6 @@
 {
   "levels": [
     {
-      "id": "near-sell-limit",
-      "price": 159.55,
-      "direction": "above",
-      "note": "売り指値159.600(2.0lot, 利確159.250/損切159.820)の手前。約定前後の形を確認"
-    },
-    {
       "id": "day-low-break",
       "price": 159.15,
       "direction": "below",
@@ -23,5 +17,5 @@
     "pips": 20,
     "minutes": 15
   },
-  "updated": "2026-11-19T12:30:00+09:00"
+  "updated": "2026-11-19T12:39:25+09:00"
 }
