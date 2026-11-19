@@ -21,22 +21,18 @@ concurrency:
 jobs:
   watch:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 60
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
-      - name: Run watcher
+      - name: Run watcher loop
         env:
           FX_ALERT_WEBHOOK_URL: ${{ secrets.FX_ALERT_WEBHOOK_URL }}
           FX_ALERT_WEBHOOK_AUTH: ${{ secrets.FX_ALERT_WEBHOOK_AUTH }}
           SEND_TEST: ${{ inputs.send_test }}
           TZ: Asia/Tokyo
-        run: python3 watch.py
-
-      - name: Commit and push state
-        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bash commit_state.sh
+        run: bash watch_loop.sh

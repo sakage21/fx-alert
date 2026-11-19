@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """USD/JPY price watcher for GitHub Actions.
 
-Runs once per invocation (scheduled about every 5 minutes). Checks configured
+Runs one check per invocation. The Actions job loops this script about
+every 5 minutes for ~55 minutes (see watch_loop.sh). Checks configured
 levels against the high/low of 1-minute bars since the last check, then POSTs
 a webhook only when a level is reached or a spike occurs.
 

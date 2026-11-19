@@ -26,7 +26,7 @@ git commit -m "chore: update watcher state"
 
 for i in 1 2 3 4 5; do
   git fetch origin
-  if ! git rebase origin/main; then
+  if ! git rebase --autostash origin/main; then
     echo "rebase failed (attempt $i)"
     git rebase --abort || true
     sleep 3

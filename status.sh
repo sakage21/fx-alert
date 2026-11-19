@@ -6,6 +6,7 @@ cd "$(dirname "$0")"
 echo "time: $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M:%S %Z')"
 echo
 echo "=== 最近のワークフロー実行 ==="
+echo "(1回の実行は約55分間、そのあいだ5分おきに確認します)"
 if command -v gh >/dev/null 2>&1; then
   gh run list --repo sakage21/fx-alert --workflow watch.yml --limit 8 || gh run list --repo sakage21/fx-alert --limit 8
 else
