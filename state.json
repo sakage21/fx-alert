@@ -3,12 +3,8 @@
   "last_fire_type": "level",
   "last_spike_fire_time": null,
   "last_spike_price": null,
-  "last_checked_time": "2026-11-20T06:40:05+09:00",
+  "last_checked_time": "2026-11-20T06:45:06+09:00",
   "samples": [
-    {
-      "time": "2026-11-20T06:25:04+09:00",
-      "price": 159.709
-    },
     {
       "time": "2026-11-20T06:30:05+09:00",
       "price": 159.705
@@ -20,6 +16,10 @@
     {
       "time": "2026-11-20T06:40:05+09:00",
       "price": 159.667
+    },
+    {
+      "time": "2026-11-20T06:45:06+09:00",
+      "price": 159.657
     }
   ],
   "fired_history": [
