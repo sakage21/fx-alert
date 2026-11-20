@@ -1,9 +1,9 @@
 {
-  "last_fire_time": "2026-11-20T17:42:45+09:00",
-  "last_fire_type": "level",
-  "last_spike_fire_time": "2026-11-20T10:00:22+09:00",
-  "last_spike_price": 159.412,
-  "last_checked_time": "2026-11-20T18:35:54+09:00",
+  "last_fire_time": "2026-11-20T18:40:55+09:00",
+  "last_fire_type": "spike",
+  "last_spike_fire_time": "2026-11-20T18:40:55+09:00",
+  "last_spike_price": 158.933,
+  "last_checked_time": "2026-11-20T18:40:54+09:00",
   "samples": [
     {
       "time": "2026-11-20T18:20:54+09:00",
@@ -20,6 +20,10 @@
     {
       "time": "2026-11-20T18:35:54+09:00",
       "price": 158.998
+    },
+    {
+      "time": "2026-11-20T18:40:54+09:00",
+      "price": 158.933
     }
   ],
   "fired_history": [
@@ -138,6 +142,14 @@
       "type": "level",
       "id": "range-break-1590",
       "price": 158.98
+    },
+    {
+      "time": "2026-11-20T18:40:55+09:00",
+      "type": "spike",
+      "move_pips": 20.6,
+      "high": 159.09100341796875,
+      "low": 158.88499450683594,
+      "price": 158.933
     }
   ]
 }
