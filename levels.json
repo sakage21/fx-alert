@@ -1,12 +1,6 @@
 {
   "levels": [
     {
-      "id": "filled-15962",
-      "price": 159.62,
-      "direction": "below",
-      "note": "買い指値159.640（IFD-OCO 2.5lot、TP159.920/SL159.460）の約定確認。約定なら建玉管理（23時前決済前提）"
-    },
-    {
       "id": "range-low-1595",
       "price": 159.5,
       "direction": "below",
@@ -23,5 +17,5 @@
     "pips": 20,
     "minutes": 15
   },
-  "updated": "2026-11-20T09:20:14+09:00"
+  "updated": "2026-11-20T09:25:14+09:00"
 }
