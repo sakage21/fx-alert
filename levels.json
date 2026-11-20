@@ -1,12 +1,6 @@
 {
   "levels": [
     {
-      "id": "near-buy-15967",
-      "price": 159.67,
-      "direction": "below",
-      "note": "買い指値159.640（IFD-OCO 2.5lot、TP159.920/SL159.460）の手前。押し方と勢いを確認し維持か取消を判断"
-    },
-    {
       "id": "range-low-1595",
       "price": 159.5,
       "direction": "below",
@@ -23,5 +17,5 @@
     "pips": 20,
     "minutes": 15
   },
-  "updated": "2026-11-20T09:12:00+09:00"
+  "updated": "2026-11-20T09:20:14+09:00"
 }
