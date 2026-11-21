@@ -1,0 +1,16 @@
+{
+  // FXデモ ドル円価格監視（Cloudflare Workers 版）
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "fx-alert",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": true,
+  "triggers": { "crons": ["* * * * *"] },
+  "durable_objects": {
+    "bindings": [{ "name": "WATCHER", "class_name": "Watcher" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Watcher"] }],
+  "vars": { "DRY_RUN": "1" },
+  "observability": { "enabled": true }
+  // secrets (wrangler secret put): FX_ALERT_WEBHOOK_URL, FX_ALERT_WEBHOOK_AUTH, ADMIN_TOKEN
+}

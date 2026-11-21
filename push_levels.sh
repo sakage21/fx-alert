@@ -46,8 +46,26 @@ if ! git pull --rebase --autostash origin main; then
   exit 1
 fi
 
+# Cloudflare Worker 版へも同じ levels.json を書き込む（失敗したら終了コード1）
+sync_cloudflare() {
+  local cf_sync="/workspace/fx-alert-cf/sync_levels.sh"
+  if [[ "${FX_SKIP_CF_SYNC:-}" == "1" ]]; then
+    echo "FX_SKIP_CF_SYNC=1 のため Worker への同期を省略しました" >&2
+    return 0
+  fi
+  if [[ ! -x "$cf_sync" ]]; then
+    echo "Worker 同期失敗: $cf_sync がありません" >&2
+    exit 1
+  fi
+  if ! "$cf_sync" "$PWD/levels.json"; then
+    echo "!!! GitHub へのプッシュは済みましたが、Cloudflare Worker への同期に失敗しました。/workspace/fx-alert-cf/sync_levels.sh を再実行してください。" >&2
+    exit 1
+  fi
+}
+
 if git diff --quiet -- levels.json && git diff --cached --quiet -- levels.json; then
   echo "levels.json に変更はありません"
+  sync_cloudflare
   exit 0
 fi
 
@@ -55,3 +73,4 @@ git add levels.json
 git commit -m "Update levels.json"
 git push origin main
 echo "levels.json をプッシュしました"
+sync_cloudflare

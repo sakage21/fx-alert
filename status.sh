@@ -43,3 +43,11 @@ if [[ -f state.json ]]; then
 else
   echo "(なし)"
 fi
+
+echo
+echo "=== Cloudflare Worker 版 ==="
+if [[ -x /workspace/fx-alert-cf/cf_status.sh ]]; then
+  /workspace/fx-alert-cf/cf_status.sh || echo "(Worker の状態を取得できませんでした)"
+else
+  echo "(cf_status.sh がありません)"
+fi
