@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# After editing levels.json, pull Actions commits, validate JSON, commit, and push.
+# After editing levels.json: validate JSON, commit and push to GitHub (record only since 2026-11-23),
+# then sync to the Cloudflare Worker (the live watcher). Fails loudly if the Worker sync fails.
+# Before editing, run /workspace/fx-alert-cf/cf_pull_levels.sh --write to pick up levels the Worker already fired.
 set -euo pipefail
 cd "$(dirname "$0")"
 

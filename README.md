@@ -83,5 +83,5 @@ gh workflow run watch.yml --repo sakage21/fx-alert -f send_test=true
 - YahooのJPY=Xはデモの値より数銭ずれるため、監視価格は書いた値の3銭手前で発火する（above は price-0.03 以上、below は price+0.03 以下）。
 - 1時間のクールダウンは廃止（2026-11-19）。発火した監視価格は消え、起こされた点検で次の価格を置く。急変通知は10銭のヒステリシスのみ。
 
-## Cloudflare Workers 版（2026-11-21〜、並行稼働中）
-- `cloudflare/` に1分おきの Worker 版があります（現在 DRY_RUN=1 で送信なし）。`push_levels.sh` は GitHub へのプッシュ後に Worker へも levels.json を同期し、失敗したら止まります。詳細は `cloudflare/README.md`。
+## Cloudflare Workers 版（2026-11-23 から本番。GitHub Actions 版は無効化済み）
+- `cloudflare/` の1分おきの Worker 版が本番です（DRY_RUN=0）。levels.json の編集前に `/workspace/fx-alert-cf/cf_pull_levels.sh --write` を実行してください。`push_levels.sh` は GitHub へのプッシュ後に Worker へも levels.json を同期し、失敗したら止まります。詳細は `cloudflare/README.md`。

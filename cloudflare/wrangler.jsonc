@@ -10,7 +10,7 @@
     "bindings": [{ "name": "WATCHER", "class_name": "Watcher" }]
   },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Watcher"] }],
-  "vars": { "DRY_RUN": "1" },
+  "vars": { "DRY_RUN": "0" },
   "observability": { "enabled": true }
   // secrets (wrangler secret put): FX_ALERT_WEBHOOK_URL, FX_ALERT_WEBHOOK_AUTH, ADMIN_TOKEN
 }

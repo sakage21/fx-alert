@@ -27,7 +27,7 @@ Durable Object（SQLite）に `levels` / `state`（最後の通知、急変動�
 
 ## DRY_RUN
 
-`wrangler.jsonc` の `vars.DRY_RUN` が `"1"` のあいだは、判定・levels の削除・履歴の記録まですべて行いますが、Webhook は送らず `state.dry_run_log` に「送るはずだった中身」を残します。GitHub 版と並行で動かしてルーチンを二重に起こさないため、最初は `"1"` で動かしています。切り替えは `cutover.sh`（中身を読んでから手で実行）。
+`wrangler.jsonc` の `vars.DRY_RUN` が `"1"` のあいだは、判定・levels の削除・履歴の記録まですべて行いますが、Webhook は送らず `state.dry_run_log` に「送るはずだった中身」を残します。2026-11-23 に `cutover.sh` で `"0"`（本番送信）に切り替え、GitHub 版は無効化しました。切り替えは `cutover.sh`（中身を読んでから手で実行）。
 
 ## ファイル
 
